@@ -1,6 +1,6 @@
 package main
 
-import "github.com/tkrajina/typescriptify-golang-structs/typescriptify"
+import "github.com/tkrajina/typescriptify-golang-structs/pythonfy"
 
 type Address struct {
 	// Used in html
@@ -25,20 +25,20 @@ type Person struct {
 }
 
 func main() {
-	converter := typescriptify.New()
+	converter := pythonfy.New()
 	converter.CreateConstructor = true
 	converter.Indent = "    "
 	converter.BackupDir = ""
 
 	converter.Add(Person{})
 
-	err := converter.ConvertToFile("browser_test/example_output.ts")
+	err := converter.ConvertToFile("browser_test/example_output.py")
 	if err != nil {
 		panic(err.Error())
 	}
 
 	converter.CreateInterface = true
-	err = converter.ConvertToFile("browser_test/example_output_interfaces.ts")
+	err = converter.ConvertToFile("browser_test/example_output_interfaces.py")
 	if err != nil {
 		panic(err.Error())
 	}

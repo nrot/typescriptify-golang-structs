@@ -31,11 +31,11 @@ import (
 	"fmt"
 
 	m "{{ .ModelsPackage }}"
-	"github.com/tkrajina/typescriptify-golang-structs/typescriptify"
+	"github.com/tkrajina/typescriptify-golang-structs/Pythony"
 )
 
 func main() {
-	t := typescriptify.New()
+	t := Pythony.New()
 	t.CreateInterface = {{ .Interface }}
 {{ range $key, $value := .InitParams }}	t.{{ $key }}={{ $value }}
 {{ end }}
