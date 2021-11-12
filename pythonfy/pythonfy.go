@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	pyTransformTag      = "ts_transform"
-	pyType              = "ts_type"
+	pyTransformTag      = "py_transform"
+	pyType              = "py_type"
 	pyConvertValuesFunc = `"""def convertValues(a: Any, classs: Any, asMap: bool = false) -> Any:
 {ident}if not a:
 {ident}{ident}return a
@@ -255,7 +255,7 @@ func (t *typeScriptClassBuilder) AddMapField(fieldName string, field reflect.Str
 	// 	keyTypeStr = t.prefix + keyType.Name() + t.suffix
 	// }
 
-	t.fields = append(t.fields, fmt.Sprintf("%s%s: {[key: %s]: %s};", t.indent, fieldName, keyTypeStr, valueTypeName))
+	t.fields = append(t.fields, fmt.Sprintf("%s%s: dict[%s, %s]", t.indent, fieldName, keyTypeStr, valueTypeName))
 	if valueType.Kind() == reflect.Struct {
 		t.constructorBody = append(t.constructorBody, fmt.Sprintf("%s%sself.%s = self.convertValues(self, source[\"%s\"], %s, true);", t.indent, t.indent, strippedFieldName, strippedFieldName, t.prefix+valueTypeName+t.suffix))
 	} else {
@@ -550,6 +550,7 @@ func (t *Pythony) convertType(depth int, typeOf reflect.Type, customCode map[str
 	}
 
 	builder := typeScriptClassBuilder{
+		parent: typeOf,
 		types:  t.kinds,
 		indent: t.Indent,
 		prefix: t.Prefix,
@@ -567,9 +568,10 @@ func (t *Pythony) convertType(depth int, typeOf reflect.Type, customCode map[str
 			continue
 		}
 
-		// if t.kinds[t.structTypes] == jsonFieldName {
-
-		// }
+		// t.logf(depth, "Name: %s; jsonFieldName: %s", entityName, field.Type.String())
+		if typeOf.Name() == jsonFieldName {
+			jsonFieldName = fmt.Sprintf("'%s'", jsonFieldName)
+		}
 
 		var err error
 		fldOpts := t.getFieldOptions(typeOf, field)
@@ -712,6 +714,7 @@ func (t *Pythony) AddImport(i string) {
 }
 
 type typeScriptClassBuilder struct {
+	parent               reflect.Type
 	types                map[reflect.Kind]string
 	indent               string
 	fields               []string
@@ -773,6 +776,9 @@ func (t *typeScriptClassBuilder) AddEnumField(fieldName string, field reflect.St
 
 func (t *typeScriptClassBuilder) AddStructField(fieldName string, field reflect.StructField) {
 	fieldType := field.Type.Name()
+	if t.parent.Name() == fieldType {
+		fieldType = fmt.Sprintf("'%s'", fieldType)
+	}
 	strippedFieldName := strings.ReplaceAll(fieldName, "?", "")
 	t.addField(fieldName, t.prefix+fieldType+t.suffix)
 	t.addInitializerFieldLine(strippedFieldName, fmt.Sprintf("self.convertValues(source[\"%s\"], %s)", strippedFieldName, t.prefix+fieldType+t.suffix))
@@ -780,6 +786,9 @@ func (t *typeScriptClassBuilder) AddStructField(fieldName string, field reflect.
 
 func (t *typeScriptClassBuilder) AddArrayOfStructsField(fieldName string, field reflect.StructField, arrayDepth int) {
 	fieldType := field.Type.Elem().Name()
+	if t.parent.Name() == fieldType {
+		fieldType = fmt.Sprintf("'%s'", fieldType)
+	}
 	strippedFieldName := strings.ReplaceAll(fieldName, "?", "")
 	t.addField(fieldName, t.prefix+strings.Repeat("list[", arrayDepth)+fieldType+strings.Repeat("]", arrayDepth)+t.suffix)
 	t.addInitializerFieldLine(strippedFieldName, fmt.Sprintf("self.convertValues(source[\"%s\"], %s)", strippedFieldName, t.prefix+fieldType+t.suffix))

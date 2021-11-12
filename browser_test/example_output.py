@@ -33,8 +33,8 @@ class Person:
     nicknames: list[str]
     addresses: list[Address]
     address: Address
-    metadata: {[key:string]:string}
-    friends: list[Person]
+    metadata: list[int]
+    friends: list['Person']
 
     def __init__(self, source: Any = {}): 
         if isinstance(source, str):
@@ -45,7 +45,7 @@ class Person:
         self.addresses = self.convertValues(source["addresses"], Address)
         self.address = self.convertValues(source["address"], Address)
         self.metadata = source["metadata"]
-        self.friends = self.convertValues(source["friends"], Person)
+        self.friends = self.convertValues(source["friends"], 'Person')
     
 
     """def convertValues(a: Any, classs: Any, asMap: bool = false) -> Any:

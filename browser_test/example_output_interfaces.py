@@ -18,5 +18,5 @@ class Person:
     nicknames: list[str]
     addresses: list[Address]
     address: Address
-    metadata: {[key:string]:string}
-    friends: list[Person]
+    metadata: list[int]
+    friends: list['Person']
