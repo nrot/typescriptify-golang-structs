@@ -11,6 +11,7 @@ class Address:
 class PersonalInfo: 
     hobby: list[str]
     pet_name: str
+    inter: Any
 
 class Person: 
     name: str

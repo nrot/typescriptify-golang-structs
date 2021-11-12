@@ -19,12 +19,14 @@ class Address:
 class PersonalInfo: 
     hobby: list[str]
     pet_name: str
+    inter: Any
 
     def __init__(self, source: Any = {}): 
         if isinstance(source, str):
             source = json.loads(source)
         self.hobby = source["hobby"]
         self.pet_name = source["pet_name"]
+        self.inter = source["inter"]
     
 
 class Person: 
@@ -48,15 +50,5 @@ class Person:
         self.friends = self.convertValues(source["friends"], 'Person')
     
 
-    """def convertValues(a: Any, classs: Any, asMap: bool = false) -> Any:
-        if not a:
-            return a
-        if a.slice:
-            return (a as any[]).map(elem => self.convertValues(elem, classs))
-        elif "object" == typeof a:
-            if asMap:
-                for key in a:
-                    a[key] = classs(a[key])
-                return a
-            return classs(a)
-        return a"""
+    def convertValues(a: Any, classs: Any, asMap: bool = false) -> Any:
+        raise SyntaxError("Not implemented yet")

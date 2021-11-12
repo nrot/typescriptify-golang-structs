@@ -8,8 +8,9 @@ type Address struct {
 }
 
 type PersonalInfo struct {
-	Hobbies []string `json:"hobby"`
-	PetName string   `json:"pet_name"`
+	Hobbies []string    `json:"hobby"`
+	PetName string      `json:"pet_name"`
+	Inter   interface{} `json:"inter"`
 }
 
 type Person struct {

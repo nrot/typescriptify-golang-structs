@@ -1,6 +1,6 @@
 package main
 
-import "github.com/tkrajina/typescriptify-golang-structs/pythonfy"
+import "github.com/tkrajina/typescriptify-golang-structs/phpfy"
 
 type Address struct {
 	// Used in html
@@ -10,8 +10,9 @@ type Address struct {
 }
 
 type PersonalInfo struct {
-	Hobbies []string `json:"hobby"`
-	PetName string   `json:"pet_name"`
+	Hobbies []string    `json:"hobby"`
+	PetName string      `json:"pet_name"`
+	Inter   interface{} `json:"inter"`
 }
 
 type Person struct {
@@ -25,20 +26,20 @@ type Person struct {
 }
 
 func main() {
-	converter := pythonfy.New()
+	converter := phpfy.New()
 	converter.CreateConstructor = true
 	converter.Indent = "    "
 	converter.BackupDir = ""
 
 	converter.Add(Person{})
 
-	err := converter.ConvertToFile("browser_test/example_output.py")
+	err := converter.ConvertToFile("browser_test/example_output.php")
 	if err != nil {
 		panic(err.Error())
 	}
 
 	converter.CreateInterface = true
-	err = converter.ConvertToFile("browser_test/example_output_interfaces.py")
+	err = converter.ConvertToFile("browser_test/example_output_interfaces.php")
 	if err != nil {
 		panic(err.Error())
 	}
