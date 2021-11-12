@@ -15,18 +15,9 @@ import (
 const (
 	pyTransformTag      = "py_transform"
 	pyType              = "py_type"
-	pyConvertValuesFunc = `"""def convertValues(a: Any, classs: Any, asMap: bool = false) -> Any:
-{ident}if not a:
-{ident}{ident}return a
-{ident}if a.slice:
-{ident}{ident}return (a as any[]).map(elem => self.convertValues(elem, classs))
-{ident}elif "object" == typeof a:
-{ident}{ident}if asMap:
-{ident}{ident}{ident}for key in a:
-{ident}{ident}{ident}{ident}a[key] = classs(a[key])
-{ident}{ident}{ident}return a
-{ident}{ident}return classs(a)
-{ident}return a"""`
+	pyConvertValuesFunc = `def convertValues(a: Any, classs: Any, asMap: bool = false) -> Any:
+{ident}raise SyntaxError("Not implemented yet")
+`
 )
 
 // TypeOptions overrides options set by `ts_*` tags.
